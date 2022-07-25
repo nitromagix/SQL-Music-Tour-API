@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       event_stage_id: { type: DataTypes.INTEGER, allowNull: false },
       band_id: { type: DataTypes.INTEGER, allowNull: false },
-      set_time_date: { type: DataTypes.DATE, allowNull: false },
+      set_start_time: { type: DataTypes.DATE, allowNull: false },
     },
     {
       sequelize,

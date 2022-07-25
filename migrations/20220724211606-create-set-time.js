@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false,
       },
 
-      st_time_date: {
+      set_start_time: {
         type: Sequelize.DATE,
         allowNull: false,
       },
