@@ -15,6 +15,9 @@ stages.get("/", async (req, res) => {
   try {
     const foundStages = await Stage.findAll({
       order: [["name", "ASC"]],
+      where: {
+        name: { [Op.like]: query.name ? `%${query.name}%` : "%" },
+      },
     });
     res.status(200).json(foundStages);
   } catch (error) {
@@ -48,7 +51,7 @@ stages.post("/", async (req, res) => {
 
 // UPDATE A STAGE
 stages.put("/:id", async (req, res) => {
-  const params = req.params.id;
+  const params = req.params;
   try {
     const updatedStage = await Stage.update(req.body, {
       where: {
@@ -65,7 +68,7 @@ stages.put("/:id", async (req, res) => {
 
 // DELETE A STAGE
 stages.delete("/:id", async (req, res) => {
-  const params = req.params.id;
+  const params = req.params;
   try {
     const deletedStage = await Stage.destroy({
       where: {

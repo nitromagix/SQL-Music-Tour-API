@@ -18,6 +18,9 @@ events.get("/", async (req, res) => {
         ["date", "ASC"],
         ["start_time", "ASC"],
       ],
+      where: {
+        name: { [Op.like]: query.name ? `%${query.name}%` : "%" },
+      },
     });
     res.status(200).json(foundEvents);
   } catch (error) {
@@ -51,7 +54,7 @@ events.post("/", async (req, res) => {
 
 // UPDATE A EVENT
 events.put("/:id", async (req, res) => {
-  const params = req.params.id;
+  const params = req.params;
   try {
     const updatedEvent = await Event.update(req.body, {
       where: {
@@ -68,7 +71,7 @@ events.put("/:id", async (req, res) => {
 
 // DELETE A EVENT
 events.delete("/:id", async (req, res) => {
-  const params = req.params.id;
+  const params = req.params;
   try {
     const deletedEvent = await Event.destroy({
       where: {
