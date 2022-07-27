@@ -8,20 +8,10 @@ require("dotenv").config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// SEQUELIZE CONNECTION
-// const sequelize = new Sequelize({
-//   storage: process.env.PG_URI,
-//   dialect: process.env.PG_DIALECT,
-//   username: process.env.PG_USER,
-//   password: process.env.PG_PASS,
-// });
+// CONTROLLERS 
+const bandController = require('./controllers/band_controller')
+app.use('/bands', bandController)
 
-// try {
-//   sequelize.authenticate();
-//   console.log(`Connected with Sequelize at ${process.env.PG_URI}`);
-// } catch (err) {
-//   console.log(`Unable to connect to PG: ${err}`);
-// }
 
 // ROOT
 app.get("/", (req, res) => {
