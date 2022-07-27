@@ -2,14 +2,43 @@
 
 // DEPENDENCIES
 const express = require("express");
-const bands = express.Router();
 const db = require("../models");
+const { Op } = require("sequelize");
+
+const bands = express.Router();
 const { Band } = db;
 
 // FIND ALL BANDS
+
+// bands.get("/", async (req, res) => {
+//   try {
+//     const foundBands = await Band.findAll();
+//     res.status(200).json(foundBands);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
+
+// bands.get("/", async (req, res) => {
+//   try {
+//     const foundBands = await Band.findAll({
+//       order: [["available_start_time", "DESC"]],
+//     });
+//     res.status(200).json(foundBands);
+//   } catch (error) {
+//     res.status(500).json(error);
+//   }
+// });
+
 bands.get("/", async (req, res) => {
+  const query = req.query;
   try {
-    const foundBands = await Band.findAll();
+    const foundBands = await Band.findAll({
+      order: [["name", "ASC"]],
+      where: {
+        name: {[Op.like]: query.name ? `%${query.name}%` : '%'}
+      }
+    });
     res.status(200).json(foundBands);
   } catch (error) {
     res.status(500).json(error);
@@ -18,9 +47,9 @@ bands.get("/", async (req, res) => {
 
 // FIND ONE BAND
 bands.get("/:id", async (req, res) => {
+  const params = req.params;
   try {
-    const bandId = req.params.id;
-    const foundBand = await Band.findOne({ where: { band_id: bandId } });
+    const foundBand = await Band.findOne({ where: { band_id: params.id } });
     res.status(200).json(foundBand);
   } catch (error) {
     res.status(500).json(error);
