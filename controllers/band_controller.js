@@ -36,8 +36,8 @@ bands.get("/", async (req, res) => {
     const foundBands = await Band.findAll({
       order: [["name", "ASC"]],
       where: {
-        name: {[Op.like]: query.name ? `%${query.name}%` : '%'}
-      }
+        name: { [Op.like]: query.name ? `%${query.name}%` : "%" },
+      },
     });
     res.status(200).json(foundBands);
   } catch (error) {
@@ -71,10 +71,11 @@ bands.post("/", async (req, res) => {
 
 // UPDATE A BAND
 bands.put("/:id", async (req, res) => {
+  const params = req.params;
   try {
     const updatedBand = await Band.update(req.body, {
       where: {
-        band_id: req.params.id,
+        band_id: params.id,
       },
     });
     res.status(200).json({
@@ -87,10 +88,11 @@ bands.put("/:id", async (req, res) => {
 
 // DELETE A BAND
 bands.delete("/:id", async (req, res) => {
+  const params = req.params;
   try {
     const deletedBand = await Band.destroy({
       where: {
-        band_id: req.params.id,
+        band_id: params.id,
       },
     });
     res.status(200).json({
