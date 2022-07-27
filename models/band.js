@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
       name: { type: DataTypes.STRING, allowNull: false },
       genre: { type: DataTypes.TEXT, allowNull: false },
       available_start_time: { type: DataTypes.DATE, allowNull: false },
-      end_time: { type: DataTypes.DATE, allowNull: false },
+      available_end_time: { type: DataTypes.DATE, allowNull: false },
+      recommendation: { type: DataTypes.STRING },
     },
     {
       sequelize,
