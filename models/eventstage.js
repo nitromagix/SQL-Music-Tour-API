@@ -8,7 +8,6 @@ const { Event } = require("./event");
 const { Stage } = require("./stage");
 const { SetTime } = require("./settime");
 
-
 module.exports = (sequelize, DataTypes) => {
   class EventStage extends Model {
     /**
@@ -17,10 +16,20 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
 
-    static associate({ SetTime }) {
-      EventStage.belongsTo(SetTime, {
+    static associate({ SetTime, Stage, Event }) {
+      EventStage.hasMany(SetTime, {
         foreignKey: "set_time_id",
         as: "set_time",
+      });
+
+      EventStage.belongsTo(Stage, {
+        foreignKey: "stage_id",
+        as: "stage",
+      });
+
+      EventStage.belongsTo(Event, {
+        foreignKey: "event_id",
+        as: "event",
       });
 
       // EventStage.belongsTo(Event, {

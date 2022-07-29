@@ -6,7 +6,7 @@ const db = require("../models");
 const { Op } = require("sequelize");
 
 const bands = express.Router();
-const { Band } = db;
+const { Band, MeetGreet, Event, EventStage, Stage, SetTime } = db;
 
 // FIND ALL BANDS
 
@@ -35,9 +35,7 @@ bands.get("/", async (req, res) => {
   try {
     const foundBands = await Band.findAll({
       order: [["name", "ASC"]],
-      where: {
-        name: { [Op.like]: query.name ? `%${query.name}%` : "%" },
-      },
+      where: { band_id: query.id },
     });
     res.status(200).json(foundBands);
   } catch (error) {
@@ -46,10 +44,37 @@ bands.get("/", async (req, res) => {
 });
 
 // FIND ONE BAND
-bands.get("/:id", async (req, res) => {
+bands.get("/:name", async (req, res) => {
   const params = req.params;
+  const query = req.query;
+  // console.log(query.event);
   try {
-    const foundBand = await Band.findOne({ where: { band_id: params.id } });
+    const foundBand = await Band.findOne({
+      where: { name: params.name },
+      include: [
+        {
+          model: MeetGreet,
+          as: "meet_greets",
+          include: {
+            model: Event,
+            as: "event",
+            where: {
+              name: { [Op.like]: query.event ? `%${query.event}%` : "%" },
+            },
+          },
+        },
+        {
+          model: SetTime,
+          as: "set_times",
+          include: {
+            model: EventStage,
+            as: "event_stages",
+            include: [{ model: Event, as: "event" }, { model: Stage, as: "stage" }],
+            
+          },
+        },
+      ],
+    });
     res.status(200).json(foundBand);
   } catch (error) {
     res.status(500).json(error);

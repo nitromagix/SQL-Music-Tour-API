@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "event",
         through: EventStage,
       });
+
+      Stage.belongsTo(EventStage, {
+        foreignKey: "stage_id",
+        as: "stage"
+      });
     }
   }
   Stage.init(
