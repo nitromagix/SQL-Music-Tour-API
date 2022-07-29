@@ -1,5 +1,13 @@
+//
+
 "use strict";
+
+const { Events } = require("pg");
 const { Model } = require("sequelize");
+
+const { Event } = require("./event");
+const { EventStage } = require("./eventstage");
+
 module.exports = (sequelize, DataTypes) => {
   class Stage extends Model {
     /**
@@ -7,8 +15,12 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
+    static associate({ Event, EventStage }) {
+      Stage.belongsToMany(Event, {
+        foreignKey: "stage_id",
+        as: "event",
+        through: EventStage,
+      });
     }
   }
   Stage.init(

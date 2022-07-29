@@ -1,5 +1,12 @@
+//
+
 "use strict";
+
 const { Model } = require("sequelize");
+
+const { Band } = require("./band");
+const { EventStage } = require("./eventstage");
+
 module.exports = (sequelize, DataTypes) => {
   class SetTime extends Model {
     /**
@@ -8,7 +15,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      SetTime.belongsTo(Band, {
+        foreignKey: "band_id",
+        as: "band",
+      });
+
+      SetTime.belongsTo(EventStage, {
+        foreignKey: "event_stage_id",
+        as: "event_stage",
+      });
+
+
     }
   }
   SetTime.init(
