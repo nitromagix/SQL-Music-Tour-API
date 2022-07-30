@@ -5,8 +5,9 @@
 const { Events } = require("pg");
 const { Model } = require("sequelize");
 
-const { Event } = require("./event");
-const { EventStage } = require("./eventstage");
+const db = require("../models");
+
+const { Event, EventStage } = db;
 
 module.exports = (sequelize, DataTypes) => {
   class Stage extends Model {
@@ -24,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Stage.belongsTo(EventStage, {
         foreignKey: "stage_id",
-        as: "stage"
+        as: "stage",
       });
     }
   }

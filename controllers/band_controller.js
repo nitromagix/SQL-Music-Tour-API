@@ -31,9 +31,13 @@ const { Band, MeetGreet, Event, EventStage, Stage, SetTime } = db;
 // });
 
 bands.get("/", async (req, res) => {
+  const query = req.query;
   try {
     const foundBands = await Band.findAll({
       order: [["name", "ASC"]],
+      where: {
+        name: { [Op.like]: query.name ? `%${query.name}%` : "%" },
+      },
     });
     res.status(200).json(foundBands);
   } catch (error) {
@@ -81,7 +85,7 @@ bands.get("/:name", async (req, res) => {
                   name: { [Op.like]: query.event ? `%${query.event}%` : "%" },
                 },
               },
-              { model: Stage, as: "stage",attributes: ["name"], },
+              { model: Stage, as: "stage", attributes: ["name"] },
             ],
           },
         },

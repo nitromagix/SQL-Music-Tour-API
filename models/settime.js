@@ -4,8 +4,9 @@
 
 const { Model } = require("sequelize");
 
-const { Band } = require("./band");
-const { EventStage } = require("./eventstage");
+const db = require("../models");
+
+const { Band, EventStage } = db;
 
 module.exports = (sequelize, DataTypes) => {
   class SetTime extends Model {

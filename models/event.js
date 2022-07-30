@@ -4,9 +4,9 @@
 
 const { Model } = require("sequelize");
 
-const { Stage } = require("./stage");
-const { EventStage } = require("./eventstage");
-const { MeetGreet } = require("./meetgreet");
+const db = require("../models");
+
+const { MeetGreet, EventStage, Stage } = db;
 
 module.exports = (sequelize, DataTypes) => {
   class Event extends Model {
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Event.hasMany(EventStage, {
         foreignKey: "event_id",
-        as: "event"
+        as: "event",
       });
 
       Event.hasMany(MeetGreet, {

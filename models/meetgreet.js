@@ -4,8 +4,9 @@
 
 const { Model } = require("sequelize");
 
-const { Band } = require("./band");
-const { Event } = require("./event");
+const db = require("../models");
+
+const { Band, Event } = db;
 
 module.exports = (sequelize, DataTypes) => {
   class MeetGreet extends Model {
