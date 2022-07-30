@@ -31,11 +31,9 @@ const { Band, MeetGreet, Event, EventStage, Stage, SetTime } = db;
 // });
 
 bands.get("/", async (req, res) => {
-  const query = req.query;
   try {
     const foundBands = await Band.findAll({
       order: [["name", "ASC"]],
-      where: { band_id: query.id },
     });
     res.status(200).json(foundBands);
   } catch (error) {
@@ -50,13 +48,16 @@ bands.get("/:name", async (req, res) => {
   // console.log(query.event);
   try {
     const foundBand = await Band.findOne({
+      attributes: ["name"],
       where: { name: params.name },
       include: [
         {
           model: MeetGreet,
+          attributes: ["meet_start", "meet_end"],
           as: "meet_greets",
           include: {
             model: Event,
+            attributes: ["name", "date"],
             as: "event",
             where: {
               name: { [Op.like]: query.event ? `%${query.event}%` : "%" },
@@ -65,14 +66,29 @@ bands.get("/:name", async (req, res) => {
         },
         {
           model: SetTime,
+          attributes: ["set_start_time"],
           as: "set_times",
           include: {
             model: EventStage,
+            attributes: ["event_id"],
             as: "event_stages",
-            include: [{ model: Event, as: "event" }, { model: Stage, as: "stage" }],
-            
+            include: [
+              {
+                model: Event,
+                attributes: ["name", "date"],
+                as: "event",
+                where: {
+                  name: { [Op.like]: query.event ? `%${query.event}%` : "%" },
+                },
+              },
+              { model: Stage, as: "stage",attributes: ["name"], },
+            ],
           },
         },
+      ],
+      order: [
+        ["meet_greets", "event", "date", "ASC"],
+        ["set_times", "event_stages", "event", "date", "ASC"],
       ],
     });
     res.status(200).json(foundBand);
