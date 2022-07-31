@@ -6,7 +6,7 @@ const db = require("../models");
 const { Op } = require("sequelize");
 
 const events = express.Router();
-const { Event } = db;
+const { Event, MeetGreet, Band, SetTime, EventStage, Stage } = db;
 
 // FIND ALL EVENTS
 
@@ -29,10 +29,54 @@ events.get("/", async (req, res) => {
 });
 
 // FIND ONE EVENT
-events.get("/:id", async (req, res) => {
+events.get("/:name", async (req, res) => {
   const params = req.params;
   try {
-    const foundEvent = await Event.findOne({ where: { event_id: params.id } });
+    const foundEvent = await Event.findOne({
+      attributes: ["name", "date", "start_time", "end_time"],
+      where: { name: params.name },
+      include: [
+        {
+          model: MeetGreet,
+          attributes: ["meet_start", "meet_end"],
+          as: "meet_greets",
+          include: {
+            model: Band,
+            attributes: ["name", "available_start_time", "available_end_time"],
+            as: "band",
+          },
+        },
+        {
+          model: Stage,
+          as: "stages",
+          attributes: ["name"],
+          through: { attributes: [] },
+        },
+        {
+          model: EventStage,
+          attributes: ["stage_id"],
+          as: "event_stages",
+          include: [
+            {
+              model: Stage,
+              as: "stage",
+              attributes: ["name"],
+            },
+            {
+              model: SetTime,
+              attributes: ["set_start_time"],
+              as: "set_times",
+              include: {
+                model: Band,
+                as: "band",
+                attributes: ["name"],
+              },
+            },
+          ],
+        },
+      ],
+      order: [["meet_greets", "meet_start", "ASC"]],
+    });
     res.status(200).json(foundEvent);
   } catch (error) {
     res.status(500).json(error);

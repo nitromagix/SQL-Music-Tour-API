@@ -19,13 +19,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate({ Event, EventStage }) {
       Stage.belongsToMany(Event, {
         foreignKey: "stage_id",
-        as: "event",
+        as: "events",
         through: EventStage,
       });
 
       Stage.belongsTo(EventStage, {
         foreignKey: "stage_id",
-        as: "stage",
+        as: "event_stage",
       });
     }
   }
