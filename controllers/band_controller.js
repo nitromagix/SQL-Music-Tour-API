@@ -6,6 +6,7 @@ const db = require("../models");
 const { Op } = require("sequelize");
 
 const bands = express.Router();
+
 const { Band, MeetGreet, Event, EventStage, Stage, SetTime } = db;
 
 // FIND ALL BANDS
@@ -29,6 +30,7 @@ bands.get("/", async (req, res) => {
 bands.get("/:name", async (req, res) => {
   const params = req.params;
   const query = req.query;
+  console.log(params.name);
   // console.log(query.event);
   try {
     const foundBand = await Band.findOne({
